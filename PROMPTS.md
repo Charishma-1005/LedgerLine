@@ -260,3 +260,11 @@ The approved IntelliJ workspace configuration supplied `DB_URL`/`DB_USERNAME` an
 **Completed:** Removed the admin-email early return so configured admin and auditor bootstrap paths execute independently. Added runner unit tests for auditor-only and admin-only configuration, plus a startup integration test that seeds a USER and confirms an auditor-only configuration promotes it. The startup test uses a unique in-memory H2 database to avoid cross-test role state. Existing registration authorization remains covered: public registration cannot assign AUDITOR. The transaction detail page now explicitly says reversals are unavailable. Production PostgreSQL connections require `sslmode=verify-full`; development settings were not changed. `.gitignore` explicitly excludes `.idea/workspace.xml`, environment files, local properties, pgpass, and common key/certificate formats. README and this history were updated; THREATS records the current result while retaining timestamped historical findings.
 
 **Verification actually performed:** The targeted bootstrap/auditor/admin/production-configuration command passed 19 tests. The complete `.\mvnw.cmd test` suite passed 61 tests across 12 suites, with 0 failures, 0 errors, and 0 skipped; tests use H2 and Hibernate validation. `git diff --check` passed, and `git check-ignore` confirmed `.idea/workspace.xml` and representative local credential paths are ignored. No database or Flyway operation was run, no migration was changed, and no commit or push was made.
+
+## 2026-11-11 - Merge initial GitHub repository history
+
+**Requested:** Merge the unrelated `origin/main` initial history into local `master`, preserve the local project and remote README/ignore content, and do not push.
+
+**Completed:** Merged the remote README description into the project overview and combined its generated class/log/archive/crash-file ignore patterns with LedgerLine's existing IDE, credential, and build exclusions. No project source or migrations were deleted or overwritten. The remote initial commit and local LedgerLine commit are both retained as merge parents.
+
+**Verification actually performed:** The full `.\mvnw.cmd test` suite passed after resolving the merge: 61 tests, 0 failures, 0 errors, 0 skipped, across 12 suites (H2). No PostgreSQL access, migration, or push was performed.

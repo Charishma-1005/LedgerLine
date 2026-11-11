@@ -1,6 +1,6 @@
 # LedgerLine
 
-LedgerLine is a server-rendered financial management application for organizing personal accounts, recording money movement, and reviewing ledger-backed activity. It is being developed for the Snovasys Fresher Hiring Challenge 2026.
+LedgerLine is a Java Spring Boot and PostgreSQL financial management application for organizing personal accounts, recording double-entry money movement, tracking transactions, and reviewing ledger-backed activity through dashboards and reports. It is being developed for the Snovasys Fresher Hiring Challenge 2026.
 
 ## Features
 

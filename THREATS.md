@@ -79,6 +79,10 @@ The admin and auditor startup bootstrap paths now run independently, so an audit
 
 **Verification:** Targeted bootstrap/auditor/admin/production-configuration tests passed (19 tests). The full H2 Maven suite passed: 61 tests, 0 failures, 0 errors, 0 skipped, across 12 suites. Hibernate validation runs in the test profile. `git diff --check` passed; representative workspace and local credential paths are ignored. No PostgreSQL connection, migration, or database change was performed for this submission-fix task. The preceding 2026-11-10 recovery-completion entry documents the separate PostgreSQL V1–V10 and Hibernate verification; its earlier 58-test count predates these three added passing tests.
 
+## 2026-11-11 - Initial GitHub history merge
+
+Merged the remote initial README and `.gitignore` into the local project without removing LedgerLine content. The ignore rules retain exclusions for local credentials and IDE/build outputs and include generated class, archive, log, and JVM crash files. The full H2 Maven suite passed after merge: 61 tests, 0 failures, 0 errors, 0 skipped. No database or migration was changed, and no push was performed.
+
 
 ## 2026-11-09 - Phase 6 final verification review
 
