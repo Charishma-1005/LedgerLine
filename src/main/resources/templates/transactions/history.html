@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title>Transactions | LedgerLine</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <aside th:replace="~{fragments/navigation :: sidebar('transactions', ${currentEmail})}"></aside>
+    <main class="main-workspace">
+        <header class="topbar">
+            <button class="mobile-menu-button" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="main-sidebar" data-menu-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+            <div class="breadcrumb"><a th:href="@{/}">Workspace</a><span class="breadcrumb-separator">/</span><strong>Transactions</strong></div>
+            <div class="topbar-actions"><span class="secure-indicator"><span class="secure-dot"></span> Secure workspace</span><span class="avatar avatar-small" aria-hidden="true">LL</span></div>
+        </header>
+        <div class="page-content">
+            <section class="welcome-row">
+                <div><p class="eyebrow">MONEY MOVEMENT</p><h1>Transactions</h1><p class="welcome-subtitle">A complete record of your posted activity.</p></div>
+                <a class="button button-primary" th:href="@{/transactions/new}"><span aria-hidden="true">＋</span> Move money</a>
+            </section>
+            <p class="feedback-message" th:if="${transactionFeedback}" th:text="${transactionFeedback}" role="status"></p>
+
+            <section class="section-block transaction-history-section" aria-labelledby="activity-heading">
+                <div class="section-heading"><div><p class="panel-label">POSTED ACTIVITY</p><h2 id="activity-heading">Transaction history</h2></div></div>
+                <nav class="transaction-filters" aria-label="Filter transactions by type">
+                    <a th:href="@{/transactions(type='ALL')}" th:classappend="${selectedType == 'ALL' ? ' active' : ''}" th:attr="aria-current=${selectedType == 'ALL' ? 'page' : null}">All activity</a>
+                    <a th:href="@{/transactions(type='DEPOSIT')}" th:classappend="${selectedType == 'DEPOSIT' ? ' active' : ''}" th:attr="aria-current=${selectedType == 'DEPOSIT' ? 'page' : null}">Deposits</a>
+                    <a th:href="@{/transactions(type='WITHDRAWAL')}" th:classappend="${selectedType == 'WITHDRAWAL' ? ' active' : ''}" th:attr="aria-current=${selectedType == 'WITHDRAWAL' ? 'page' : null}">Withdrawals</a>
+                    <a th:href="@{/transactions(type='TRANSFER')}" th:classappend="${selectedType == 'TRANSFER' ? ' active' : ''}" th:attr="aria-current=${selectedType == 'TRANSFER' ? 'page' : null}">Transfers</a>
+                </nav>
+                <div class="transactions-card transaction-history-card" th:if="${!#lists.isEmpty(transactions)}">
+                    <div class="transaction-table-wrap">
+                        <table class="transaction-table">
+                            <thead><tr><th scope="col">Transaction</th><th scope="col">Date</th><th scope="col">Description</th><th scope="col" class="amount-column">Amount</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Details</span></th></tr></thead>
+                            <tbody>
+                            <tr th:each="transaction : ${transactions}">
+                                <td><span class="transaction-kind"><span class="transaction-icon" th:classappend="${' transaction-' + #strings.toLowerCase(transaction.type.name())}"><svg viewBox="0 0 24 24" aria-hidden="true"><path th:if="${transaction.type.name() == 'DEPOSIT'}" d="M12 19V5m0 0L6 11m6-6 6 6"/><path th:if="${transaction.type.name() == 'WITHDRAWAL'}" d="M12 5v14m0 0 6-6m-6 6-6-6"/><path th:if="${transaction.type.name() == 'TRANSFER'}" d="M4 8h15m0 0-3-3m3 3-3 3M20 16H5m0 0 3-3m-3 3 3 3"/></svg></span><span><strong th:text="${transaction.type}">DEPOSIT</strong><small th:text="${transaction.currencyCode}">USD</small></span></span></td>
+                                <td class="transaction-date" th:text="${#temporals.format(transaction.occurredAt, 'MMM d, yyyy · h:mm a')}">Nov 9, 2026</td>
+                                <td class="transaction-description" th:text="${transaction.description}">Deposit</td>
+                                <td class="transaction-amount amount-column" th:classappend="${transaction.type.name() == 'DEPOSIT' ? ' amount-positive' : transaction.type.name() == 'WITHDRAWAL' ? ' amount-negative' : ''}"><span th:if="${transaction.type.name() == 'DEPOSIT'}" aria-label="Credit">+</span><span th:if="${transaction.type.name() == 'WITHDRAWAL'}" aria-label="Debit">&#x2212;</span><span th:if="${transaction.type.name() == 'TRANSFER'}" aria-label="Transfer">&#x2194;</span><span th:text="${transaction.amount.toPlainString()}">0.00</span></td>
+                                <td><span class="posted-pill"><span></span>Posted</span></td>
+                                <td><a class="transaction-detail-link" th:href="@{/transactions/{id}(id=${transaction.id})}" th:aria-label="${'View ' + transaction.type + ' details'}">View</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="empty-card empty-transactions transaction-empty" th:if="${#lists.isEmpty(transactions)}">
+                    <span class="empty-icon empty-activity-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h4l2.5-6 4.5 12 2.5-6H20"/></svg></span>
+                    <div><strong th:text="${selectedType == 'ALL' ? 'No transactions yet' : 'No matching transactions'}">No transactions yet</strong><p th:text="${selectedType == 'ALL' ? 'Posted deposits, withdrawals, and transfers will appear here.' : 'Try another transaction type or view all activity.'}">Posted activity will appear here.</p></div>
+                    <a class="button button-secondary" th:if="${selectedType == 'ALL'}" th:href="@{/transactions/new}">Make your first transaction</a>
+                    <a class="text-link" th:if="${selectedType != 'ALL'}" th:href="@{/transactions(type='ALL')}">View all activity</a>
+                </div>
+            </section>
+            <footer class="page-footer"><span>LedgerLine</span><span>Posted transactions are permanent and cannot be edited.</span></footer>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/ledgerline.js}" defer></script>
+</body>
+</html>

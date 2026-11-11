@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title>Audit review | LedgerLine</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body>
+<div class="app-shell auditor-shell">
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <aside class="sidebar" id="main-sidebar" aria-label="Auditor navigation">
+        <a class="brand" th:href="@{/auditor}" aria-label="LedgerLine audit review">
+            <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span>ledger<span class="brand-light">line</span></span>
+        </a>
+        <div class="workspace-label">AUDIT REVIEW</div>
+        <nav class="side-nav" aria-label="Auditor pages">
+            <a class="side-link active" th:href="@{/auditor}" aria-current="page" aria-label="Audit and statements">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8m-8 4h8m-8 4h5"/></svg>
+                <span>Audit &amp; statements</span>
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="secure-note"><span class="secure-dot"></span><span>Read-only access</span></div>
+            <div class="auditor-profile"><span class="avatar">AU</span><span class="profile-copy"><strong>Auditor</strong><small th:text="${currentEmail}">auditor@example.com</small></span></div>
+            <form class="auditor-logout" th:action="@{/logout}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit">Sign out securely</button>
+            </form>
+        </div>
+    </aside>
+    <main class="main-workspace">
+        <header class="topbar">
+            <button class="mobile-menu-button" type="button" aria-label="Open auditor navigation" aria-expanded="false" aria-controls="main-sidebar" data-menu-toggle>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            </button>
+            <div class="breadcrumb"><span>Restricted workspace</span><span class="breadcrumb-separator">/</span><strong>Audit review</strong></div>
+            <span class="admin-indicator"><span class="secure-dot"></span> Read-only reviewer</span>
+        </header>
+        <div class="page-content auditor-page-content">
+            <section class="welcome-row"><div><p class="eyebrow">AUDIT &amp; ASSURANCE</p><h1>Audit review</h1><p class="welcome-subtitle">Review recent audit events and posted ledger statement lines.</p></div></section>
+
+            <section class="section-block auditor-section" aria-labelledby="audit-events-heading">
+                <div class="section-heading"><div><p class="panel-label">LATEST 100 EVENTS</p><h2 id="audit-events-heading">Audit events</h2></div></div>
+                <div class="transactions-card" th:if="${!#lists.isEmpty(events)}">
+                    <div class="transaction-table-wrap"><table class="transaction-table auditor-table">
+                        <caption class="visually-hidden">Latest audit events</caption>
+                        <thead><tr><th scope="col">Timestamp</th><th scope="col">Actor</th><th scope="col">Action</th><th scope="col">Target</th></tr></thead>
+                        <tbody><tr th:each="event : ${events}">
+                            <td th:text="${#temporals.format(event.occurredAt, 'MMM d, yyyy h:mm a')}">Nov 9, 2026</td>
+                            <td th:text="${event.actorOwnerId == null ? 'System' : 'User #' + event.actorOwnerId}">User #12</td>
+                            <td><span class="audit-action" th:text="${event.action}">ACCOUNT_CREATED</span></td>
+                            <td th:text="${event.targetType + ' #' + event.targetId}">FINANCIAL_ACCOUNT #3</td>
+                        </tr></tbody>
+                    </table></div>
+                </div>
+                <div class="empty-card" th:if="${#lists.isEmpty(events)}"><div><strong>No audit events recorded</strong><p>Recorded application events will appear here.</p></div></div>
+            </section>
+
+            <section class="section-block auditor-section" aria-labelledby="statement-heading">
+                <div class="section-heading"><div><p class="panel-label">LATEST 100 POSTED TRANSACTIONS</p><h2 id="statement-heading">Transaction statement</h2><p class="auditor-section-note">Each row is a posted journal line. Debit and credit amounts remain separate and include their currency.</p></div></div>
+                <div class="transactions-card" th:if="${!#lists.isEmpty(statementLines)}">
+                    <div class="transaction-table-wrap"><table class="transaction-table auditor-statement-table">
+                        <caption class="visually-hidden">Journal lines for the latest 100 posted transactions</caption>
+                        <thead><tr><th scope="col">Posted</th><th scope="col">Owner</th><th scope="col">Transaction</th><th scope="col">Ledger account</th><th scope="col">Currency</th><th scope="col">Debit</th><th scope="col">Credit</th></tr></thead>
+                        <tbody><tr th:each="line : ${statementLines}">
+                            <td th:text="${#temporals.format(line.postedAt, 'MMM d, yyyy h:mm a')}">Nov 9, 2026</td>
+                            <td th:text="${line.ownerEmail}">customer@example.com</td>
+                            <td><strong th:text="${line.transactionType + ' #' + line.transactionId}">DEPOSIT #15</strong><small class="auditor-description" th:text="${line.description}">Deposit</small></td>
+                            <td th:text="${line.ledgerAccountName}">Everyday</td>
+                            <td th:text="${line.currencyCode}">USD</td>
+                            <td class="auditor-debit" th:text="${line.debitAmount.toPlainString()}">0.00</td>
+                            <td class="auditor-credit" th:text="${line.creditAmount.toPlainString()}">25.00</td>
+                        </tr></tbody>
+                    </table></div>
+                </div>
+                <div class="empty-card" th:if="${#lists.isEmpty(statementLines)}"><div><strong>No posted transactions</strong><p>Posted journal statement lines will appear here.</p></div></div>
+            </section>
+            <footer class="page-footer"><span>LedgerLine audit review</span><span>Read-only view of application audit and posted journal data.</span></footer>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/ledgerline.js}" defer></script>
+</body>
+</html>

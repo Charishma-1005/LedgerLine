@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your account | LedgerLine</title>
+</head>
+<body>
+<main>
+    <h1>Your LedgerLine account</h1>
+    <p>Signed in as <span th:text="${email}"></span></p>
+    <p><a th:href="@{/accounts}">Manage accounts</a></p>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Sign out</button>
+    </form>
+</main>
+</body>
+</html>

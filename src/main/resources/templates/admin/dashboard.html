@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title>Administration | LedgerLine</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <aside th:replace="~{fragments/admin-navigation :: sidebar('overview', ${currentEmail})}"></aside>
+    <main class="main-workspace">
+        <header class="topbar">
+            <button class="mobile-menu-button" type="button" aria-label="Open administration navigation" aria-expanded="false" aria-controls="main-sidebar" data-menu-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+            <div class="breadcrumb"><a th:href="@{/admin}">Admin console</a><span class="breadcrumb-separator">/</span><strong>Overview</strong></div>
+            <div class="topbar-actions"><span class="admin-indicator"><span class="secure-dot"></span> Restricted access</span><span class="avatar avatar-small" aria-hidden="true">AD</span></div>
+        </header>
+        <div class="page-content admin-page-content">
+            <section class="welcome-row">
+                <div><p class="eyebrow">LEDGERLINE OPERATIONS</p><h1>Administration</h1><p class="welcome-subtitle">Monitor platform access and review recent audit activity.</p></div>
+                <a class="button button-primary" th:href="@{/admin/users}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.7-3.2 2.8-4.8 6.5-4.8s5.8 1.6 6.5 4.8M17 8h5m-2.5-2.5v5"/></svg> Manage users</a>
+            </section>
+
+            <section class="admin-stat-grid" aria-label="Platform statistics">
+                <article class="admin-stat-card"><span class="admin-stat-icon stat-users"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.7-3.2 2.8-4.8 6.5-4.8s5.8 1.6 6.5 4.8M17 8h5m-2.5-2.5v5"/></svg></span><div><p>Total users</p><strong th:text="${stats.totalUsers}">0</strong><small>Registered identities</small></div></article>
+                <article class="admin-stat-card"><span class="admin-stat-icon stat-enabled"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7"/></svg></span><div><p>Enabled users</p><strong th:text="${stats.enabledUsers}">0</strong><small>Can access the platform</small></div></article>
+                <article class="admin-stat-card"><span class="admin-stat-icon stat-disabled"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m6 6 12 12"/></svg></span><div><p>Disabled users</p><strong th:text="${stats.disabledUsers}">0</strong><small>Access currently suspended</small></div></article>
+                <article class="admin-stat-card"><span class="admin-stat-icon stat-accounts"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9h18M7 15h4"/></svg></span><div><p>Active accounts</p><strong th:text="${stats.activeAccounts}">0</strong><small th:text="${stats.totalAccounts + ' total / ' + stats.closedAccounts + ' closed'}">0 total / 0 closed</small></div></article>
+            </section>
+
+            <section class="section-block admin-audit-section" aria-labelledby="audit-heading">
+                <div class="section-heading"><div><p class="panel-label">SECURITY &amp; OPERATIONS</p><h2 id="audit-heading">Recent audit activity</h2><p class="admin-section-subtitle">Latest 100 recorded events</p></div></div>
+                <div class="transactions-card admin-audit-card" th:if="${!#lists.isEmpty(events)}">
+                    <div class="transaction-table-wrap"><table class="transaction-table admin-audit-table">
+                        <thead><tr><th scope="col">Timestamp</th><th scope="col">Actor</th><th scope="col">Action</th><th scope="col">Target</th></tr></thead>
+                        <tbody><tr th:each="event : ${events}">
+                            <td class="transaction-date" th:text="${#temporals.format(event.occurredAt, 'MMM d, yyyy · h:mm a')}">Nov 9, 2026</td>
+                            <td><span class="audit-actor" th:text="${event.actorOwnerId == null ? 'System' : 'User #' + event.actorOwnerId}">User #12</span></td>
+                            <td><span class="audit-action" th:text="${event.action}">ADMIN_USER_DISABLED</span></td>
+                            <td><span class="audit-target"><span th:text="${event.targetType}">USER</span><small th:text="${'#' + event.targetId}">#42</small></span></td>
+                        </tr></tbody>
+                    </table></div>
+                </div>
+                <div class="empty-card admin-empty" th:if="${#lists.isEmpty(events)}"><span class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v14H5zM8 9h8m-8 3h8m-8 3h5"/></svg></span><div><strong>No audit events yet</strong><p>Recorded registration, account, financial and administrative activity will appear here.</p></div></div>
+            </section>
+            <footer class="page-footer"><span>LedgerLine administration</span><span>Administrative actions are recorded in the audit trail.</span></footer>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/ledgerline.js}" defer></script>
+</body>
+</html>

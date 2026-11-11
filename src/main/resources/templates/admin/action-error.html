@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title>Action not completed | LedgerLine Admin</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <aside th:replace="~{fragments/admin-navigation :: sidebar('users', ${currentEmail})}"></aside>
+    <main class="main-workspace">
+        <header class="topbar"><button class="mobile-menu-button" type="button" aria-label="Open administration navigation" aria-expanded="false" aria-controls="main-sidebar" data-menu-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><div class="breadcrumb"><a th:href="@{/admin}">Admin console</a><span class="breadcrumb-separator">/</span><strong>Action not completed</strong></div><div class="topbar-actions"><span class="admin-indicator"><span class="secure-dot"></span> Restricted access</span></div></header>
+        <div class="page-content admin-page-content">
+            <section class="welcome-row"><div><p class="eyebrow">USER MANAGEMENT</p><h1>Action not completed</h1><p class="welcome-subtitle">The account status was not changed.</p></div></section>
+            <section class="admin-error-card" role="alert"><span class="dialog-mark dialog-mark-warning"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 3.8 2.6 17.2A1.8 1.8 0 0 0 4.2 20h15.6a1.8 1.8 0 0 0 1.6-2.8L13.7 3.8a2 2 0 0 0-3.4 0Z"/></svg></span><div><strong>Access change declined</strong><p th:text="${adminError}">The requested change could not be completed.</p></div></section>
+            <a class="button button-primary admin-error-return" th:href="@{/admin/users}">Return to user management</a>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/ledgerline.js}" defer></script>
+</body>
+</html>

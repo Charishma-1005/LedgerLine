@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title th:text="${dashboard != null ? 'Overview | LedgerLine' : 'LedgerLine | Money, in good order'}">LedgerLine</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body>
+<div th:if="${dashboard != null}" class="app-shell">
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <aside class="sidebar" id="main-sidebar" aria-label="Main navigation">
+        <a class="brand" th:href="@{/}" aria-label="LedgerLine overview">
+            <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span>ledger<span class="brand-light">line</span></span>
+        </a>
+        <div class="workspace-label">WORKSPACE</div>
+        <nav class="side-nav">
+            <a class="side-link active" th:href="@{/}" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+                <span>Overview</span>
+            </a>
+            <a class="side-link" th:href="@{/accounts}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9h18M7 15h4"/></svg>
+                <span>Accounts</span>
+            </a>
+            <a class="side-link" th:href="@{/transactions}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h13m0 0-3-3m3 3-3 3M17 17H4m0 0 3-3m-3 3 3 3"/></svg>
+                <span>Transactions</span>
+            </a>
+            <a class="side-link" th:href="@{/reports}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5m0 14h16M8 15v-4m4 4V7m4 8v-6m4 6V4"/></svg>
+                <span>Reports</span>
+            </a>
+            <span class="side-link side-link-disabled" aria-disabled="true" title="Settings are not available yet">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1a1.7 1.7 0 0 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 0 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 0 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 0 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 0 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a1.7 1.7 0 0 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 0 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 0 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z"/></svg>
+                <span>Settings</span><span class="soon-badge">Soon</span>
+            </span>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="secure-note"><span class="secure-dot"></span><span>Your money is in good order.</span></div>
+            <details class="profile-menu profile-menu-side">
+                <summary>
+                    <span class="avatar" th:text="${dashboard.initials}">LL</span>
+                    <span class="profile-copy"><strong>Personal account</strong><small th:text="${dashboard.email}">you@example.com</small></span>
+                    <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+                </summary>
+                <div class="profile-popover">
+                    <a th:href="@{/account}">Account</a>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit">Sign out securely</button>
+                    </form>
+                </div>
+            </details>
+        </div>
+    </aside>
+
+    <main class="main-workspace">
+        <header class="topbar">
+            <button class="mobile-menu-button" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="main-sidebar" data-menu-toggle>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            </button>
+            <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-separator">/</span><strong>Overview</strong></div>
+            <div class="topbar-actions">
+                <span class="secure-indicator"><span class="secure-dot"></span> Secure workspace</span>
+                <details class="profile-menu profile-menu-top">
+                    <summary aria-label="Open profile menu">
+                        <span class="avatar avatar-small" th:text="${dashboard.initials}">LL</span>
+                        <svg class="chevron chevron-dark" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+                    </summary>
+                    <div class="profile-popover profile-popover-right">
+                        <span class="popover-email" th:text="${dashboard.email}">you@example.com</span>
+                        <a th:href="@{/account}">Account</a>
+                        <form th:action="@{/logout}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button type="submit">Sign out securely</button>
+                        </form>
+                    </div>
+                </details>
+            </div>
+        </header>
+
+        <div class="page-content">
+            <section class="welcome-row">
+                <div>
+                    <p class="eyebrow">YOUR FINANCIAL HOME</p>
+                    <h1>Welcome back<span class="welcome-period">.</span></h1>
+                    <p class="welcome-subtitle">Here’s your money, all in one place.</p>
+                </div>
+                <a class="button button-primary create-account" th:href="@{/accounts/new}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    <span>New account</span>
+                </a>
+            </section>
+
+            <section class="overview-grid" aria-label="Balance overview and quick actions">
+                <article class="balance-panel">
+                    <div class="balance-panel-top">
+                        <div>
+                            <p class="panel-label">TOTAL BALANCE</p>
+                            <p class="balance-caption">Across your accounts</p>
+                        </div>
+                        <span class="balance-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M3 9.5 12 4l9 5.5M5 10v8m4-8v8m6-8v8m4-8v8M3 20h18"/></svg>
+                        </span>
+                    </div>
+                    <div class="total-balances" th:if="${!#lists.isEmpty(dashboard.totalBalances)}">
+                        <div class="total-balance-row" th:each="total : ${dashboard.totalBalances}">
+                            <strong><span class="balance-currency" th:text="${total.currencyCode}">USD</span><span th:text="${total.amount.toPlainString()}">0.00</span></strong>
+                        </div>
+                    </div>
+                    <div class="balance-empty" th:if="${#lists.isEmpty(dashboard.totalBalances)}">
+                        <strong>Start with an account</strong>
+                        <span>Your balances will appear here once you add an account.</span>
+                        <a th:href="@{/accounts/new}">Create your first account <span aria-hidden="true">→</span></a>
+                    </div>
+                    <div class="balance-footnote"><span class="footnote-check">✓</span> Live from your posted ledger entries</div>
+                </article>
+
+                <article class="quick-actions-panel">
+                    <div class="panel-heading-row"><div><p class="panel-label">MOVE MONEY</p><h2>Quick actions</h2></div></div>
+                    <div class="quick-actions">
+                        <a class="quick-action" th:href="@{/transactions/new(operation='DEPOSIT')}">
+                            <span class="action-icon action-deposit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></span>
+                            <span><strong>Deposit</strong><small>Add funds</small></span><span class="action-arrow">→</span>
+                        </a>
+                        <a class="quick-action" th:href="@{/transactions/new(operation='WITHDRAWAL')}">
+                            <span class="action-icon action-withdraw"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m6-6-6 6-6-6"/></svg></span>
+                            <span><strong>Withdraw</strong><small>Take out funds</small></span><span class="action-arrow">→</span>
+                        </a>
+                        <a class="quick-action" th:href="@{/transactions/new(operation='TRANSFER')}">
+                            <span class="action-icon action-transfer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15m0 0-4-4m4 4-4 4M20 16H5m0 0 4 4m-4-4 4-4"/></svg></span>
+                            <span><strong>Transfer</strong><small>Between accounts</small></span><span class="action-arrow">→</span>
+                        </a>
+                    </div>
+                </article>
+            </section>
+
+            <section class="section-block">
+                <div class="section-heading">
+                    <div><p class="panel-label">YOUR MONEY</p><h2>Accounts</h2></div>
+                    <a class="text-link" th:href="@{/accounts}">View all <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="account-grid" th:if="${!#lists.isEmpty(dashboard.accounts)}">
+                    <a class="account-card" th:each="account,iter : ${dashboard.accounts}" th:href="@{/accounts/{id}(id=${account.id})}">
+                        <span class="account-card-top">
+                            <span class="account-type-icon" th:classappend="${' account-icon-' + #strings.toLowerCase(account.type)}">
+                                <svg th:if="${account.type == 'BANK'}" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-5 9 5M5 10v8m5-8v8m4-8v8m5-8v8M3 20h18"/></svg>
+                                <svg th:if="${account.type == 'WALLET'}" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2.5"/><path d="M3 10h18m-5 5h2"/></svg>
+                                <svg th:if="${account.type == 'CASH'}" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 8h.01M18 16h.01"/></svg>
+                            </span>
+                            <span class="account-status" th:classappend="${account.active ? '' : ' status-closed'}"><span></span><span th:text="${account.active ? 'Active' : 'Closed'}">Active</span></span>
+                        </span>
+                        <span class="account-name" th:text="${account.displayName}">Everyday account</span>
+                        <span class="account-meta"><span th:text="${account.type}">BANK</span><span class="meta-divider">·</span><span th:text="${account.currencyCode}">USD</span></span>
+                        <span class="account-balance"><span class="account-balance-currency" th:text="${account.currencyCode}">USD</span><strong th:text="${account.balance.toPlainString()}">0.00</strong></span>
+                    </a>
+                </div>
+                <div class="empty-card" th:if="${#lists.isEmpty(dashboard.accounts)}">
+                    <span class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9h18M7 15h4"/></svg></span>
+                    <div><strong>No accounts yet</strong><p>Create a bank, wallet, or cash account to start keeping everything together.</p></div>
+                    <a class="button button-secondary" th:href="@{/accounts/new}">Add an account</a>
+                </div>
+            </section>
+
+            <section class="section-block recent-section">
+                <div class="section-heading">
+                    <div><p class="panel-label">YOUR ACTIVITY</p><h2>Recent transactions</h2></div>
+                    <a class="text-link" th:href="@{/transactions}">See all activity <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="transactions-card" th:if="${!#lists.isEmpty(dashboard.recentTransactions)}">
+                    <div class="transaction-table-wrap">
+                        <table class="transaction-table">
+                            <thead><tr><th scope="col">Transaction</th><th scope="col">Date</th><th scope="col">Status</th><th scope="col" class="amount-column">Amount</th></tr></thead>
+                            <tbody>
+                            <tr th:each="transaction : ${dashboard.recentTransactions}">
+                                <td><span class="transaction-kind">
+                                    <span class="transaction-icon" th:classappend="${' transaction-' + #strings.toLowerCase(transaction.type)}">
+                                        <svg th:if="${transaction.type == 'DEPOSIT'}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg>
+                                        <svg th:if="${transaction.type == 'WITHDRAWAL'}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m6-6-6 6-6-6"/></svg>
+                                        <svg th:if="${transaction.type != 'DEPOSIT' and transaction.type != 'WITHDRAWAL'}" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15m0 0-4-4m4 4-4 4M20 16H5m0 0 4 4m-4-4 4-4"/></svg>
+                                    </span>
+                                    <span><strong th:text="${transaction.type}">DEPOSIT</strong><small th:text="${transaction.description}">Deposit</small></span>
+                                </span></td>
+                                <td class="transaction-date" th:text="${#temporals.format(transaction.occurredAt, 'MMM d, yyyy')}">Nov 9, 2026</td>
+                                <td><span class="posted-pill"><span></span><span th:text="${transaction.status}">Posted</span></span></td>
+                                <td class="transaction-amount" th:classappend="${transaction.type == 'DEPOSIT' ? ' amount-positive' : (transaction.type == 'WITHDRAWAL' ? ' amount-negative' : '')}">
+                                    <span th:if="${transaction.type == 'DEPOSIT'}">+</span><span th:if="${transaction.type == 'WITHDRAWAL'}">−</span>
+                                    <span th:text="${transaction.currencyCode}">USD</span> <span th:text="${transaction.amount.toPlainString()}">0.00</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="empty-card empty-transactions" th:if="${#lists.isEmpty(dashboard.recentTransactions)}">
+                    <span class="empty-icon empty-activity-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h4l2.2-6 3.6 12 2.2-6H20"/></svg></span>
+                    <div><strong>No transactions yet</strong><p>Your deposits, withdrawals, and transfers will appear here.</p></div>
+                    <a class="button button-secondary" th:href="@{/transactions/new}">Make your first transaction</a>
+                </div>
+            </section>
+            <footer class="page-footer"><span>LedgerLine</span><span>Thoughtful money management.</span></footer>
+        </div>
+    </main>
+</div>
+
+<main th:if="${dashboard == null}" class="welcome-landing">
+    <nav class="landing-nav">
+        <a class="brand landing-brand" th:href="@{/}" aria-label="LedgerLine home"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>ledger<span class="brand-dark">line</span></span></a>
+        <div><a class="landing-login" th:href="@{/login}">Sign in</a><a class="button button-primary" th:href="@{/register}">Get started <span aria-hidden="true">→</span></a></div>
+    </nav>
+    <section class="landing-content">
+        <span class="landing-kicker"><span class="secure-dot"></span> A clearer view of your money</span>
+        <h1>Money, in<br><span>good order.</span></h1>
+        <p>Bring your accounts and everyday money movement into one calm, considered workspace.</p>
+        <div class="landing-actions"><a class="button button-primary button-large" th:href="@{/register}">Create your account <span aria-hidden="true">→</span></a><a class="landing-login landing-login-secondary" th:href="@{/login}">I already have an account</a></div>
+        <div class="landing-proof"><span class="proof-mark">✓</span> Your balances come directly from your posted ledger entries.</div>
+    </section>
+    <div class="landing-orb landing-orb-one"></div><div class="landing-orb landing-orb-two"></div>
+</main>
+<script th:src="@{/js/ledgerline.js}" defer></script>
+</body>
+</html>

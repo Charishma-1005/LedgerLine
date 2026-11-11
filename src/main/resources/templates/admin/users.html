@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title>User management | LedgerLine Admin</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <aside th:replace="~{fragments/admin-navigation :: sidebar('users', ${currentEmail})}"></aside>
+    <main class="main-workspace">
+        <header class="topbar">
+            <button class="mobile-menu-button" type="button" aria-label="Open administration navigation" aria-expanded="false" aria-controls="main-sidebar" data-menu-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+            <div class="breadcrumb"><a th:href="@{/admin}">Admin console</a><span class="breadcrumb-separator">/</span><strong>User management</strong></div>
+            <div class="topbar-actions"><span class="admin-indicator"><span class="secure-dot"></span> Restricted access</span><span class="avatar avatar-small" aria-hidden="true">AD</span></div>
+        </header>
+        <div class="page-content admin-page-content">
+            <section class="welcome-row"><div><p class="eyebrow">ACCESS CONTROL</p><h1>User management</h1><p class="welcome-subtitle">Search identity records and manage platform access.</p></div><a class="button button-secondary" th:href="@{/admin}"><span aria-hidden="true">&#x2190;</span> Admin overview</a></section>
+            <p class="feedback-message" th:if="${adminFeedback}" th:text="${adminFeedback}" role="status"></p>
+
+            <section class="admin-user-panel" aria-labelledby="user-list-heading">
+                <div class="admin-user-panel-top"><div><p class="panel-label">IDENTITY DIRECTORY</p><h2 id="user-list-heading">Users <span class="count-badge" th:text="${totalUsers}">0</span></h2><p class="admin-section-subtitle">Showing up to 25 matching accounts per page.</p></div>
+                    <form class="admin-search-form" th:action="@{/admin/users}" method="get" role="search"><label for="user-email-search">Search by email</label><div><input id="user-email-search" type="search" name="q" th:value="${query}" maxlength="254" placeholder="name@example.com"><button class="button button-primary" type="submit">Search</button></div><a class="admin-clear-search" th:if="${!#strings.isEmpty(query)}" th:href="@{/admin/users}">Clear search</a></form>
+                </div>
+                <div class="transactions-card admin-user-table-card" th:if="${!#lists.isEmpty(users)}"><div class="transaction-table-wrap"><table class="transaction-table admin-user-table">
+                    <thead><tr><th scope="col">Email</th><th scope="col">Role</th><th scope="col">Access</th><th scope="col">Joined</th><th scope="col" class="admin-actions-heading">Actions</th></tr></thead>
+                    <tbody><tr th:each="user : ${users}">
+                        <td><span class="admin-user-email" th:text="${user.email}">user@example.com</span><small class="admin-user-id" th:text="${'User #' + user.id}">User #1</small></td>
+                        <td><span class="role-badge" th:classappend="${user.role == 'ADMIN' ? ' role-admin' : ''}" th:text="${user.role}">USER</span></td>
+                        <td><span class="admin-access-status" th:classappend="${user.enabled ? ' access-enabled' : ' access-disabled'}"><span></span><span th:text="${user.enabled ? 'Enabled' : 'Disabled'}">Enabled</span></span></td>
+                        <td class="transaction-date" th:text="${#temporals.format(user.createdAt, 'MMM d, yyyy')}">Nov 9, 2026</td>
+                        <td class="admin-actions-cell">
+                            <span class="admin-self-note" th:if="${user.email == currentEmail and user.enabled}">Current admin</span>
+                            <button class="button admin-action-button" type="button" th:if="${user.email != currentEmail or !user.enabled}" th:classappend="${user.enabled ? ' admin-disable-button' : ' admin-enable-button'}" th:attr="data-dialog-open=${'user-action-' + user.id}, aria-controls=${'user-action-' + user.id}, aria-label=${(user.enabled ? 'Disable access for ' : 'Enable access for ') + user.email}" aria-haspopup="dialog" th:text="${user.enabled ? 'Disable access' : 'Enable access'}">Disable access</button>
+                        </td>
+                    </tr></tbody>
+                </table></div></div>
+                <div class="empty-card admin-user-empty" th:if="${#lists.isEmpty(users)}"><span class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c.7-3.2 2.8-4.8 6.5-4.8m5-5 6 6m0-6-6 6"/></svg></span><div><strong th:text="${#strings.isEmpty(query) ? 'No users registered' : 'No users match this email'}">No users found</strong><p th:text="${#strings.isEmpty(query) ? 'Registered identities will appear here.' : 'Try a different email address or clear the search.'}">Try another search.</p></div></div>
+                <nav class="admin-pagination" th:if="${totalPages > 1}" aria-label="User list pages"><span th:text="${'Page ' + (currentPage + 1) + ' of ' + totalPages}">Page 1 of 2</span><div><a class="button button-secondary" th:if="${currentPage > 0}" th:href="@{/admin/users(q=${query}, page=${currentPage - 1})}">&#x2190; Previous</a><a class="button button-secondary" th:if="${currentPage + 1 < totalPages}" th:href="@{/admin/users(q=${query}, page=${currentPage + 1})}">Next &#x2192;</a></div></nav>
+            </section>
+            <footer class="page-footer"><span>LedgerLine administration</span><span>Access changes are audited. Ledger entries remain read-only.</span></footer>
+        </div>
+    </main>
+</div>
+
+<div th:each="user : ${users}">
+    <dialog class="confirm-dialog admin-confirm-dialog" th:id="${'user-action-' + user.id}" th:aria-labelledby="${'user-action-title-' + user.id}" th:aria-describedby="${'user-action-description-' + user.id}">
+        <div class="dialog-mark" th:classappend="${user.enabled ? ' dialog-mark-warning' : ' dialog-mark-operation'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path th:if="${user.enabled}" d="M12 9v4m0 4h.01M10.3 3.8 2.6 17.2A1.8 1.8 0 0 0 4.2 20h15.6a1.8 1.8 0 0 0 1.6-2.8L13.7 3.8a2 2 0 0 0-3.4 0Z"/><path th:unless="${user.enabled}" d="M5 12.5 9.5 17 19 7.5"/></svg></div>
+        <h2 th:id="${'user-action-title-' + user.id}" th:text="${user.enabled ? 'Disable this user?' : 'Enable this user?'}">Confirm access change</h2>
+        <p th:id="${'user-action-description-' + user.id}"><span th:text="${user.enabled ? 'This will prevent ' : 'This will restore access for '}">This will prevent </span><strong th:text="${user.email}">user@example.com</strong><span th:text="${user.enabled ? ' from signing in. Their records and financial history will remain unchanged.' : '. They will be able to sign in again.'}"> from signing in.</span></p>
+        <div class="dialog-actions"><button class="button button-secondary" type="button" data-dialog-close>Cancel</button><form th:action="@{/admin/users/{id}/enabled(id=${user.id})}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><input type="hidden" name="enabled" th:value="${!user.enabled}"><input type="hidden" name="q" th:value="${query}"><input type="hidden" name="page" th:value="${currentPage}"><button class="button" th:classappend="${user.enabled ? ' button-danger' : ' button-primary'}" type="submit" th:text="${user.enabled ? 'Confirm disable' : 'Confirm enable'}">Confirm</button></form></div>
+    </dialog>
+</div>
+<script th:src="@{/js/ledgerline.js}" defer></script>
+</body>
+</html>

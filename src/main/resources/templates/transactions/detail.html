@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title>Transaction details | LedgerLine</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <aside th:replace="~{fragments/navigation :: sidebar('transactions', ${currentEmail})}"></aside>
+    <main class="main-workspace">
+        <header class="topbar">
+            <button class="mobile-menu-button" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="main-sidebar" data-menu-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+            <div class="breadcrumb"><a th:href="@{/}">Workspace</a><span class="breadcrumb-separator">/</span><a th:href="@{/transactions}">Transactions</a><span class="breadcrumb-separator">/</span><strong>Details</strong></div>
+            <div class="topbar-actions"><span class="secure-indicator"><span class="secure-dot"></span> Secure workspace</span><span class="avatar avatar-small" aria-hidden="true">LL</span></div>
+        </header>
+        <div class="page-content form-page-content">
+            <section class="welcome-row"><div><p class="eyebrow">POSTED RECORD</p><h1>Transaction details</h1><p class="welcome-subtitle">This ledger record is read-only.</p></div><a class="button button-secondary" th:href="@{/transactions}"><span aria-hidden="true">&#x2190;</span> All transactions</a></section>
+            <section class="transaction-detail-card" aria-labelledby="transaction-description">
+                <div class="transaction-detail-top"><span class="transaction-icon transaction-icon-large" th:classappend="${' transaction-' + #strings.toLowerCase(transaction.type.name())}"><svg viewBox="0 0 24 24" aria-hidden="true"><path th:if="${transaction.type.name() == 'DEPOSIT'}" d="M12 19V5m0 0L6 11m6-6 6 6"/><path th:if="${transaction.type.name() == 'WITHDRAWAL'}" d="M12 5v14m0 0 6-6m-6 6-6-6"/><path th:if="${transaction.type.name() == 'TRANSFER'}" d="M4 8h15m0 0-3-3m3 3-3 3M20 16H5m0 0 3-3m-3 3 3 3"/></svg></span><span class="posted-pill"><span></span>Posted</span></div>
+                <p class="panel-label" th:text="${transaction.type}">DEPOSIT</p><h2 id="transaction-description" th:text="${transaction.description}">Deposit</h2>
+                <p class="transaction-detail-amount" th:classappend="${transaction.type.name() == 'DEPOSIT' ? ' amount-positive' : transaction.type.name() == 'WITHDRAWAL' ? ' amount-negative' : ''}"><span th:text="${transaction.type.name() == 'DEPOSIT' ? '+' : transaction.type.name() == 'WITHDRAWAL' ? '-' : ''}">+</span><span th:text="${transaction.amount.toPlainString()}">0.00</span><small th:text="${transaction.currencyCode}">USD</small></p>
+                <dl class="transaction-detail-meta"><div><dt>Type</dt><dd th:text="${transaction.type}">DEPOSIT</dd></div><div><dt>Status</dt><dd><span class="posted-pill"><span></span>Posted</span></dd></div><div><dt>Date and time</dt><dd th:text="${#temporals.format(transaction.occurredAt, 'MMMM d, yyyy · h:mm a')}">November 9, 2026</dd></div><div><dt>Description</dt><dd th:text="${transaction.description}">Deposit</dd></div></dl>
+                <p class="transaction-immutable-note"><span class="footnote-check" aria-hidden="true">&#x2713;</span> Posted transactions cannot be edited or deleted. Reversal corrections are not available in this version.</p>
+            </section>
+            <footer class="page-footer"><span>LedgerLine</span><span>Transaction history is scoped to your account.</span></footer>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/ledgerline.js}" defer></script>
+</body>
+</html>

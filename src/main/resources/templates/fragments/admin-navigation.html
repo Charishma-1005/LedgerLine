@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside th:fragment="sidebar(activePage, currentEmail)" class="sidebar admin-sidebar" id="main-sidebar" aria-label="Administration navigation">
+    <a class="brand" th:href="@{/admin}" aria-label="LedgerLine administration overview">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>ledger<span class="brand-light">line</span></span>
+    </a>
+    <div class="admin-workspace-label">ADMIN CONSOLE</div>
+    <nav class="side-nav">
+        <a class="side-link" th:classappend="${activePage == 'overview' ? ' active' : ''}" th:href="@{/admin}" th:attr="aria-current=${activePage == 'overview' ? 'page' : null}">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+            <span>Overview</span>
+        </a>
+        <a class="side-link" th:classappend="${activePage == 'users' ? ' active' : ''}" th:href="@{/admin/users}" th:attr="aria-current=${activePage == 'users' ? 'page' : null}">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.7-3.2 2.8-4.8 6.5-4.8s5.8 1.6 6.5 4.8M17 8h5m-2.5-2.5v5"/></svg>
+            <span>User management</span>
+        </a>
+        <a class="side-link" th:href="@{/}" aria-label="Return to LedgerLine workspace">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5-5m5 5-5 5"/></svg>
+            <span>Workspace</span>
+        </a>
+    </nav>
+    <div class="sidebar-bottom">
+        <div class="secure-note"><span class="secure-dot"></span><span>Restricted administration</span></div>
+        <details class="profile-menu profile-menu-side">
+            <summary><span class="avatar">AD</span><span class="profile-copy"><strong>Administrator</strong><small th:text="${currentEmail}">admin@example.com</small></span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+            <div class="profile-popover">
+                <a th:href="@{/}">Return to workspace</a>
+                <form th:action="@{/logout}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button type="submit">Sign out securely</button></form>
+            </div>
+        </details>
+    </div>
+</aside>
+</body>
+</html>

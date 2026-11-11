@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title>Accounts | LedgerLine</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <aside th:replace="~{fragments/navigation :: sidebar('accounts', ${currentEmail})}"></aside>
+    <main class="main-workspace">
+        <header class="topbar">
+            <button class="mobile-menu-button" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="main-sidebar" data-menu-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+            <div class="breadcrumb"><a th:href="@{/}">Workspace</a><span class="breadcrumb-separator">/</span><strong>Accounts</strong></div>
+            <div class="topbar-actions"><span class="secure-indicator"><span class="secure-dot"></span> Secure workspace</span><span class="avatar avatar-small" aria-hidden="true">LL</span></div>
+        </header>
+        <div class="page-content">
+            <section class="welcome-row">
+                <div><p class="eyebrow">YOUR FINANCIAL HOME</p><h1>Accounts</h1><p class="welcome-subtitle">A clear view of every place you keep money.</p></div>
+                <a class="button button-primary create-account" th:href="@{/accounts/new}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Add account</span></a>
+            </section>
+
+            <p class="feedback-message" th:if="${accountFeedback}" th:text="${accountFeedback}" role="status"></p>
+
+            <section class="section-block accounts-page-section" aria-labelledby="accounts-heading">
+                <div class="section-heading"><div><p class="panel-label">ACCOUNT OVERVIEW</p><h2 id="accounts-heading">Your accounts <span class="count-badge" th:text="${#lists.size(accounts)}">0</span></h2></div><a class="text-link" th:href="@{/transactions}">Transaction history <span aria-hidden="true">→</span></a></div>
+                <div class="account-grid" th:if="${!#lists.isEmpty(accounts)}">
+                    <article class="account-card account-page-card" th:each="account : ${accounts}">
+                        <div class="account-card-top">
+                            <span class="account-type-icon" th:classappend="${' account-icon-' + #strings.toLowerCase(account.type)}">
+                                <svg th:if="${account.type.name() == 'BANK'}" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-5 9 5M5 10v8m5-8v8m4-8v8m5-8v8M3 20h18"/></svg>
+                                <svg th:if="${account.type.name() == 'WALLET'}" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2.5"/><path d="M3 10h18m-5 5h2"/></svg>
+                                <svg th:if="${account.type.name() == 'CASH'}" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 8h.01M18 16h.01"/></svg>
+                            </span>
+                            <span class="account-status" th:classappend="${account.active ? '' : ' status-closed'}"><span></span><span th:text="${account.active ? 'Active' : 'Closed'}">Active</span></span>
+                        </div>
+                        <h3 class="account-name" th:text="${account.displayName}">Everyday account</h3>
+                        <div class="account-meta"><span th:text="${account.type}">BANK</span><span class="meta-divider">·</span><span th:text="${account.currencyCode}">USD</span></div>
+                        <div class="account-balance"><span class="account-balance-currency" th:text="${account.currencyCode}">USD</span><strong th:text="${account.balance.toPlainString()}">0.00</strong></div>
+                        <div class="account-card-actions"><a class="text-link" th:href="@{/accounts/{id}(id=${account.id})}" th:aria-label="${'Manage ' + account.displayName}">Manage account <span aria-hidden="true">→</span></a></div>
+                    </article>
+                </div>
+                <div class="empty-card account-empty" th:if="${#lists.isEmpty(accounts)}">
+                    <span class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9h18M7 15h4"/></svg></span>
+                    <div><strong>Your accounts start here</strong><p>Add a bank account, wallet, or cash account to see its ledger-backed balance here.</p></div>
+                    <a class="button button-secondary" th:href="@{/accounts/new}">Create an account</a>
+                </div>
+            </section>
+            <footer class="page-footer"><span>LedgerLine</span><span>Balances reflect posted ledger entries.</span></footer>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/ledgerline.js}" defer></script>
+</body>
+</html>

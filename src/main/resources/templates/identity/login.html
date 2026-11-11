@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title>Sign in | LedgerLine</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body class="identity-page">
+<main class="identity-shell">
+    <section class="identity-brand-panel" aria-label="About LedgerLine">
+        <a class="brand" th:href="@{/}" aria-label="LedgerLine home">
+            <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span>ledger<span class="brand-light">line</span></span>
+        </a>
+        <div class="identity-brand-copy">
+            <p class="eyebrow">YOUR MONEY, IN GOOD ORDER</p>
+            <h1>A calmer view of your finances.</h1>
+            <p>Keep your accounts and everyday money movement together in one considered workspace.</p>
+        </div>
+        <span class="identity-brand-footer">Private by design. Clear by default.</span>
+    </section>
+    <section class="identity-form-panel" aria-labelledby="identity-heading">
+        <div class="identity-form-wrap">
+            <div class="identity-mobile-brand">
+                <a class="brand" th:href="@{/}" aria-label="LedgerLine home">
+                    <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+                    <span>ledger<span class="brand-dark">line</span></span>
+                </a>
+            </div>
+            <p class="eyebrow">WELCOME BACK</p>
+            <h2 id="identity-heading">Sign in to LedgerLine</h2>
+            <p class="identity-intro">Access your financial workspace securely.</p>
+            <p class="identity-message identity-error" th:if="${loginError}" th:text="${loginError}" role="alert"></p>
+            <p class="identity-message identity-success" th:if="${registrationSuccess}" th:text="${registrationSuccess}" role="status"></p>
+            <form class="identity-form" th:action="@{/login}" method="post">
+                <div class="identity-field">
+                    <label for="email">Email address</label>
+                    <input id="email" type="email" name="email" autocomplete="username" required maxlength="320" autofocus>
+                </div>
+                <div class="identity-field">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" autocomplete="current-password" required>
+                </div>
+                <button class="button button-primary identity-submit" type="submit">Sign in securely</button>
+            </form>
+            <p class="identity-switch">New to LedgerLine? <a th:href="@{/register}">Create an account</a></p>
+            <p class="identity-security"><span class="secure-dot" aria-hidden="true"></span> Your sign-in is protected by a secure session.</p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

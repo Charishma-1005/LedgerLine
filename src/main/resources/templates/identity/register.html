@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
+    <title>Create account | LedgerLine</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
+</head>
+<body class="identity-page">
+<main class="identity-shell">
+    <section class="identity-brand-panel" aria-label="About LedgerLine">
+        <a class="brand" th:href="@{/}" aria-label="LedgerLine home">
+            <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span>ledger<span class="brand-light">line</span></span>
+        </a>
+        <div class="identity-brand-copy">
+            <p class="eyebrow">A MORE CONSIDERED WAY TO MANAGE MONEY</p>
+            <h1>Make room for a clearer picture.</h1>
+            <p>Bring your accounts and recorded activity into a focused financial workspace.</p>
+        </div>
+        <span class="identity-brand-footer">Start with the accounts you use every day.</span>
+    </section>
+    <section class="identity-form-panel" aria-labelledby="identity-heading">
+        <div class="identity-form-wrap">
+            <div class="identity-mobile-brand">
+                <a class="brand" th:href="@{/}" aria-label="LedgerLine home">
+                    <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+                    <span>ledger<span class="brand-dark">line</span></span>
+                </a>
+            </div>
+            <p class="eyebrow">GET STARTED</p>
+            <h2 id="identity-heading">Create your account</h2>
+            <p class="identity-intro">Set up your LedgerLine sign-in to get started.</p>
+            <p class="identity-message identity-error" th:if="${registrationError}" th:text="${registrationError}" role="alert"></p>
+            <form class="identity-form" th:action="@{/register}" th:object="${registrationForm}" method="post">
+                <div class="identity-field">
+                    <label for="email">Email address</label>
+                    <input id="email" type="email" th:field="*{email}" autocomplete="email" required maxlength="320">
+                    <p class="identity-validation" id="email-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" role="alert"></p>
+                </div>
+                <div class="identity-field">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" th:field="*{password}" autocomplete="new-password" required aria-describedby="password-hint">
+                    <small id="password-hint">Use at least 12 characters.</small>
+                    <p class="identity-validation" id="password-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" role="alert"></p>
+                </div>
+                <button class="button button-primary identity-submit" type="submit">Create account</button>
+            </form>
+            <p class="identity-switch">Already have an account? <a th:href="@{/login}">Sign in</a></p>
+            <p class="identity-security"><span class="secure-dot" aria-hidden="true"></span> Your password is stored as a one-way hash.</p>
+        </div>
+    </section>
+</main>
+</body>
+</html>
