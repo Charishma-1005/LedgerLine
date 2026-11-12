@@ -33,24 +33,25 @@
             <h2 id="identity-heading">Create your account</h2>
             <p class="identity-intro">Set up your LedgerLine sign-in to get started.</p>
             <p class="identity-message identity-error" th:if="${registrationError}" th:text="${registrationError}" role="alert"></p>
-            <form class="identity-form" th:action="@{/register}" th:object="${registrationForm}" method="post">
+            <form class="identity-form" th:action="@{/register}" th:object="${registrationForm}" method="post" data-loading-state>
                 <div class="identity-field">
                     <label for="email">Email address</label>
-                    <input id="email" type="email" th:field="*{email}" autocomplete="email" required maxlength="320">
+                    <input id="email" type="email" th:field="*{email}" autocomplete="email" required maxlength="320" th:attr="aria-invalid=${#fields.hasErrors('email')}">
                     <p class="identity-validation" id="email-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" role="alert"></p>
                 </div>
                 <div class="identity-field">
                     <label for="password">Password</label>
-                    <input id="password" type="password" th:field="*{password}" autocomplete="new-password" required aria-describedby="password-hint">
+                    <input id="password" type="password" th:field="*{password}" autocomplete="new-password" required aria-describedby="password-hint" th:attr="aria-invalid=${#fields.hasErrors('password')}">
                     <small id="password-hint">Use at least 12 characters.</small>
                     <p class="identity-validation" id="password-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" role="alert"></p>
                 </div>
-                <button class="button button-primary identity-submit" type="submit">Create account</button>
+                <button class="button button-primary identity-submit" type="submit" data-loading-label="Creating account…">Create account</button>
             </form>
             <p class="identity-switch">Already have an account? <a th:href="@{/login}">Sign in</a></p>
             <p class="identity-security"><span class="secure-dot" aria-hidden="true"></span> Your password is stored as a one-way hash.</p>
         </div>
     </section>
 </main>
+<script th:src="@{/js/ledgerline.js}" defer></script>
 </body>
 </html>

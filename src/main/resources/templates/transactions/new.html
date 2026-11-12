@@ -39,7 +39,7 @@
                     <div class="form-grid-two">
                         <div class="form-field">
                             <label for="accountId" data-source-label th:text="${selectedAction == 'DEPOSIT' ? 'Into account' : 'From account'}">Into account</label>
-                            <select id="accountId" th:field="*{accountId}" required data-source-account aria-describedby="account-help">
+                            <select id="accountId" th:field="*{accountId}" required data-source-account aria-describedby="account-help" th:attr="aria-invalid=${#fields.hasErrors('accountId')}">
                                 <option value="">Choose account</option>
                                 <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.displayName + ' · ' + account.currencyCode}" th:attr="data-currency=${account.currencyCode}"></option>
                             </select>
@@ -48,7 +48,7 @@
                         </div>
                         <div class="form-field" data-destination-field th:hidden="${selectedAction != 'TRANSFER'}">
                             <label for="destinationAccountId">To account</label>
-                            <select id="destinationAccountId" th:field="*{destinationAccountId}" data-destination-account aria-describedby="destination-help">
+                            <select id="destinationAccountId" th:field="*{destinationAccountId}" data-destination-account aria-describedby="destination-help" th:attr="aria-invalid=${#fields.hasErrors('destinationAccountId')}">
                                 <option value="">Choose destination</option>
                                 <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.displayName + ' · ' + account.currencyCode}" th:attr="data-currency=${account.currencyCode}"></option>
                             </select>
@@ -59,13 +59,13 @@
                     <div class="form-grid-two">
                         <div class="form-field">
                             <label for="amount">Amount</label>
-                            <div class="amount-input-wrap"><span aria-hidden="true" data-currency-prefix>¤</span><input id="amount" type="number" inputmode="decimal" min="0.01" step="any" th:field="*{amount}" placeholder="0.00" required aria-describedby="amount-help"></div>
+                            <div class="amount-input-wrap"><span aria-hidden="true" data-currency-prefix>¤</span><input id="amount" type="number" inputmode="decimal" min="0.01" step="any" th:field="*{amount}" placeholder="0.00" required aria-describedby="amount-help" th:attr="aria-invalid=${#fields.hasErrors('amount')}"></div>
                             <p class="field-help" id="amount-help">Use the selected account's currency precision. No rounding is applied.</p>
                             <p class="field-error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" role="alert"></p>
                         </div>
                         <div class="form-field">
                             <label for="currencyCode">Currency</label>
-                            <input id="currencyCode" type="text" maxlength="3" pattern="[A-Z]{3}" th:field="*{currencyCode}" required autocomplete="off" placeholder="USD" aria-describedby="currency-help">
+                            <input id="currencyCode" type="text" maxlength="3" pattern="[A-Z]{3}" th:field="*{currencyCode}" required autocomplete="off" placeholder="USD" aria-describedby="currency-help" th:attr="aria-invalid=${#fields.hasErrors('currencyCode')}">
                             <p class="field-help" id="currency-help">ISO 4217 currency code; must match the account.</p>
                             <p class="field-error" th:if="${#fields.hasErrors('currencyCode')}" th:errors="*{currencyCode}" role="alert"></p>
                         </div>

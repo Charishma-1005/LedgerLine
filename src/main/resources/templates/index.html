@@ -108,7 +108,7 @@
                     </div>
                     <div class="total-balances" th:if="${!#lists.isEmpty(dashboard.totalBalances)}">
                         <div class="total-balance-row" th:each="total : ${dashboard.totalBalances}">
-                            <strong><span class="balance-currency" th:text="${total.currencyCode}">USD</span><span th:text="${total.amount.toPlainString()}">0.00</span></strong>
+                            <strong><span class="balance-currency" th:unless="${total.currencyCode == 'INR'}" th:text="${total.currencyCode}">USD</span><span data-money th:attr="data-currency=${total.currencyCode}, aria-label=${total.currencyCode + ' ' + total.amount.toPlainString()}" th:text="${total.amount.toPlainString()}">0.00</span></strong>
                         </div>
                     </div>
                     <div class="balance-empty" th:if="${#lists.isEmpty(dashboard.totalBalances)}">
@@ -155,7 +155,7 @@
                         </span>
                         <span class="account-name" th:text="${account.displayName}">Everyday account</span>
                         <span class="account-meta"><span th:text="${account.type}">BANK</span><span class="meta-divider">·</span><span th:text="${account.currencyCode}">USD</span></span>
-                        <span class="account-balance"><span class="account-balance-currency" th:text="${account.currencyCode}">USD</span><strong th:text="${account.balance.toPlainString()}">0.00</strong></span>
+                        <span class="account-balance"><span class="account-balance-currency" th:unless="${account.currencyCode == 'INR'}" th:text="${account.currencyCode}">USD</span><strong data-money th:attr="data-currency=${account.currencyCode}, aria-label=${account.currencyCode + ' ' + account.balance.toPlainString()}" th:text="${account.balance.toPlainString()}">0.00</strong></span>
                     </a>
                 </div>
                 <div class="empty-card" th:if="${#lists.isEmpty(dashboard.accounts)}">
@@ -188,7 +188,7 @@
                                 <td><span class="posted-pill"><span></span><span th:text="${transaction.status}">Posted</span></span></td>
                                 <td class="transaction-amount" th:classappend="${transaction.type == 'DEPOSIT' ? ' amount-positive' : (transaction.type == 'WITHDRAWAL' ? ' amount-negative' : '')}">
                                     <span th:if="${transaction.type == 'DEPOSIT'}">+</span><span th:if="${transaction.type == 'WITHDRAWAL'}">−</span>
-                                    <span th:text="${transaction.currencyCode}">USD</span> <span th:text="${transaction.amount.toPlainString()}">0.00</span>
+                                    <span th:unless="${transaction.currencyCode == 'INR'}" th:text="${transaction.currencyCode}">USD</span> <span data-money th:attr="data-currency=${transaction.currencyCode}" th:text="${transaction.amount.toPlainString()}">0.00</span>
                                 </td>
                             </tr>
                             </tbody>

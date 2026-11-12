@@ -39,7 +39,7 @@
                         </div>
                         <h3 class="account-name" th:text="${account.displayName}">Everyday account</h3>
                         <div class="account-meta"><span th:text="${account.type}">BANK</span><span class="meta-divider">·</span><span th:text="${account.currencyCode}">USD</span></div>
-                        <div class="account-balance"><span class="account-balance-currency" th:text="${account.currencyCode}">USD</span><strong th:text="${account.balance.toPlainString()}">0.00</strong></div>
+                        <div class="account-balance"><span class="account-balance-currency" th:unless="${account.currencyCode == 'INR'}" th:text="${account.currencyCode}">USD</span><strong data-money th:attr="data-currency=${account.currencyCode}, aria-label=${account.currencyCode + ' ' + account.balance.toPlainString()}" th:text="${account.balance.toPlainString()}">0.00</strong></div>
                         <div class="account-card-actions"><a class="text-link" th:href="@{/accounts/{id}(id=${account.id})}" th:aria-label="${'Manage ' + account.displayName}">Manage account <span aria-hidden="true">→</span></a></div>
                     </article>
                 </div>

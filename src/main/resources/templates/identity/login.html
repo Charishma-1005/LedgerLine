@@ -34,7 +34,7 @@
             <p class="identity-intro">Access your financial workspace securely.</p>
             <p class="identity-message identity-error" th:if="${loginError}" th:text="${loginError}" role="alert"></p>
             <p class="identity-message identity-success" th:if="${registrationSuccess}" th:text="${registrationSuccess}" role="status"></p>
-            <form class="identity-form" th:action="@{/login}" method="post">
+            <form class="identity-form" th:action="@{/login}" method="post" data-loading-state>
                 <div class="identity-field">
                     <label for="email">Email address</label>
                     <input id="email" type="email" name="email" autocomplete="username" required maxlength="320" autofocus>
@@ -43,12 +43,13 @@
                     <label for="password">Password</label>
                     <input id="password" type="password" name="password" autocomplete="current-password" required>
                 </div>
-                <button class="button button-primary identity-submit" type="submit">Sign in securely</button>
+                <button class="button button-primary identity-submit" type="submit" data-loading-label="Signing in…">Sign in securely</button>
             </form>
             <p class="identity-switch">New to LedgerLine? <a th:href="@{/register}">Create an account</a></p>
             <p class="identity-security"><span class="secure-dot" aria-hidden="true"></span> Your sign-in is protected by a secure session.</p>
         </div>
     </section>
 </main>
+<script th:src="@{/js/ledgerline.js}" defer></script>
 </body>
 </html>

@@ -63,6 +63,16 @@ From the repository root, after setting the development environment variables ab
 
 Open `http://localhost:8080`. Register a user, sign in, create one or more accounts, and then record deposits, withdrawals, or transfers. The dashboard, accounts, transaction history, and reports use the signed-in user's stored records. A successful operation is persisted as a balanced journal transaction. Transfers move value between the user's accounts and are not income or expenses.
 
+## Deploy on Render with Docker
+
+1. Push the project to a GitHub repository and create a **Web Service** in Render connected to it. Select **Docker** as the runtime and use the repository root as the Docker build context.
+2. Attach a Render PostgreSQL database or use an approved PostgreSQL service. In the web service's environment settings, configure `DB_URL` as a JDBC PostgreSQL URL (`jdbc:postgresql://<host>:<port>/<database>`), `DB_USERNAME`, and `DB_PASSWORD`. Enter credentials only in Render's protected environment settings; never put them in the Dockerfile or repository.
+3. Keep `SPRING_PROFILES_ACTIVE=prod` (the image already sets it). Render supplies `PORT`; the container passes it to Spring Boot and falls back to `8080` for local runs. Do not set `PORT` manually unless required by the service configuration.
+4. The production profile requires PostgreSQL TLS with `sslmode=verify-full`. Add the trusted database CA certificate as a Render Secret File (for example, `postgres-ca.pem`) and set `SPRING_DATASOURCE_HIKARI_DATA_SOURCE_PROPERTIES_SSLROOTCERT` to its mounted path (for example, `/etc/secrets/postgres-ca.pem`). Ensure the hostname in `DB_URL` matches the certificate. Do not weaken TLS verification to make a connection succeed.
+5. Deploy and check the service logs for successful Flyway migration validation/application and Hibernate schema validation. Flyway runs on startup, so the configured database role needs migration privileges. Back up the database before deployment and use a least-privilege role appropriate to the app's runtime and migration model.
+
+The Docker build runs `./mvnw package`, including the Maven test suite, then copies the executable Spring Boot JAR into a Java 21 JRE image. The runtime process uses a non-root user and exposes port 8080. No database credentials are included in the image.
+
 ## Database migrations
 
 Flyway runs on application startup and validates/applies the common migrations in `src/main/resources/db/migration` plus the matching vendor migrations under `db/migration-vendor/{vendor}`. V1–V10 establish the current schema, with V5, V7, and V10 implemented separately for PostgreSQL and H2. V9 adds the AUDITOR value to the existing role constraint. V10 permits the `LEGACY` transaction type and restores parent-row locking in PostgreSQL's journal-entry trigger function; H2's Java trigger already locks the parent row. Hibernate validates entity mappings after migration. Back up the database before deploying schema changes and inspect Flyway output for failures; do not drop or recreate a database containing application data.

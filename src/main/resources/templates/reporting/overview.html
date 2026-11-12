@@ -25,11 +25,11 @@
 
             <section class="report-filter-panel" aria-labelledby="report-filter-heading">
                 <div><p class="panel-label">REPORTING PERIOD</p><h2 id="report-filter-heading">Choose a date range</h2></div>
-                <form th:action="@{/reports}" method="get" class="report-date-form">
+                <form th:action="@{/reports}" method="get" class="report-date-form" data-loading-state>
                     <div class="form-field"><label for="start">From</label><input id="start" name="start" type="date" th:value="${startDate}" required></div>
                     <span class="date-range-separator" aria-hidden="true">to</span>
                     <div class="form-field"><label for="end">Through</label><input id="end" name="end" type="date" th:value="${endDate}" required></div>
-                    <button class="button button-primary" type="submit">Update report</button>
+                    <button class="button button-primary" type="submit" data-loading-label="Updating…">Update report</button>
                 </form>
             </section>
             <p class="report-warning" th:if="${reportError}" th:text="${reportError}" role="alert"></p>
@@ -46,11 +46,11 @@
                 <article class="report-currency-panel" th:each="currency : ${report.currencies}">
                     <div class="report-currency-heading"><span class="currency-label" th:text="${currency.currencyCode}">USD</span><span class="report-period-label">Selected period</span></div>
                     <div class="report-metrics">
-                        <div class="report-metric report-metric-income"><span>Income</span><strong><small th:text="${currency.currencyCode}">USD</small><span th:text="${currency.income.toPlainString()}">0.00</span></strong><em>From posted income ledger entries</em></div>
-                        <div class="report-metric report-metric-expense"><span>Expenses</span><strong><small th:text="${currency.currencyCode}">USD</small><span th:text="${currency.expenses.toPlainString()}">0.00</span></strong><em>From posted expense ledger entries</em></div>
-                        <div class="report-metric"><span>Deposits</span><strong><small th:text="${currency.currencyCode}">USD</small><span th:text="${currency.deposits.toPlainString()}">0.00</span></strong><em>External funds received</em></div>
-                        <div class="report-metric"><span>Withdrawals</span><strong><small th:text="${currency.currencyCode}">USD</small><span th:text="${currency.withdrawals.toPlainString()}">0.00</span></strong><em>External funds withdrawn</em></div>
-                        <div class="report-metric"><span>Transfers</span><strong><small th:text="${currency.currencyCode}">USD</small><span th:text="${currency.transfers.toPlainString()}">0.00</span></strong><em>Between your accounts</em></div>
+                        <div class="report-metric report-metric-income"><span>Income</span><strong><small th:unless="${currency.currencyCode == 'INR'}" th:text="${currency.currencyCode}">USD</small><span data-money th:attr="data-currency=${currency.currencyCode}" th:text="${currency.income.toPlainString()}">0.00</span></strong><em>From posted income ledger entries</em></div>
+                        <div class="report-metric report-metric-expense"><span>Expenses</span><strong><small th:unless="${currency.currencyCode == 'INR'}" th:text="${currency.currencyCode}">USD</small><span data-money th:attr="data-currency=${currency.currencyCode}" th:text="${currency.expenses.toPlainString()}">0.00</span></strong><em>From posted expense ledger entries</em></div>
+                        <div class="report-metric"><span>Deposits</span><strong><small th:unless="${currency.currencyCode == 'INR'}" th:text="${currency.currencyCode}">USD</small><span data-money th:attr="data-currency=${currency.currencyCode}" th:text="${currency.deposits.toPlainString()}">0.00</span></strong><em>External funds received</em></div>
+                        <div class="report-metric"><span>Withdrawals</span><strong><small th:unless="${currency.currencyCode == 'INR'}" th:text="${currency.currencyCode}">USD</small><span data-money th:attr="data-currency=${currency.currencyCode}" th:text="${currency.withdrawals.toPlainString()}">0.00</span></strong><em>External funds withdrawn</em></div>
+                        <div class="report-metric"><span>Transfers</span><strong><small th:unless="${currency.currencyCode == 'INR'}" th:text="${currency.currencyCode}">USD</small><span data-money th:attr="data-currency=${currency.currencyCode}" th:text="${currency.transfers.toPlainString()}">0.00</span></strong><em>Between your accounts</em></div>
                     </div>
                     <p class="report-count-note" th:text="${currency.transactionCount + ' posted deposits, withdrawals and transfers in this period'}">0 posted transactions in this period</p>
                     <p class="report-no-income" th:if="${currency.income.signum() == 0 and currency.expenses.signum() == 0}">No posted income or expense ledger entries in this date range.</p>
@@ -66,7 +66,7 @@
                         <svg class="report-chart" data-report-chart role="img" th:attr="aria-label=${'Monthly deposit, withdrawal and transfer amounts in ' + series.currencyCode}, data-currency=${series.currencyCode}" viewBox="0 0 760 240" preserveAspectRatio="xMidYMid meet"><title th:text="${'Monthly activity, ' + series.currencyCode}">Monthly activity</title>
                             <g th:each="point : ${series.months}" data-trend-point th:attr="data-month=${point.month}, data-deposits=${point.deposits.toPlainString()}, data-withdrawals=${point.withdrawals.toPlainString()}, data-transfers=${point.transfers.toPlainString()}"></g>
                         </svg>
-                        <div class="trend-table-wrap"><table class="trend-data-table"><thead><tr><th scope="col">Month</th><th scope="col">Deposits</th><th scope="col">Withdrawals</th><th scope="col">Transfers</th></tr></thead><tbody><tr th:each="point : ${series.months}"><th scope="row" th:text="${point.month}">2026-01</th><td th:text="${point.deposits.toPlainString()}">0.00</td><td th:text="${point.withdrawals.toPlainString()}">0.00</td><td th:text="${point.transfers.toPlainString()}">0.00</td></tr></tbody></table></div>
+                        <div class="trend-table-wrap"><table class="trend-data-table"><thead><tr><th scope="col">Month</th><th scope="col">Deposits</th><th scope="col">Withdrawals</th><th scope="col">Transfers</th></tr></thead><tbody><tr th:each="point : ${series.months}"><th scope="row" th:text="${point.month}">2026-01</th><td data-money th:attr="data-currency=${series.currencyCode}" th:text="${point.deposits.toPlainString()}">0.00</td><td data-money th:attr="data-currency=${series.currencyCode}" th:text="${point.withdrawals.toPlainString()}">0.00</td><td data-money th:attr="data-currency=${series.currencyCode}" th:text="${point.transfers.toPlainString()}">0.00</td></tr></tbody></table></div>
                     </article>
                 </div>
                 <div class="empty-card report-trend-empty" th:if="${#lists.isEmpty(report.monthlyTrends)}"><span class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5m0 14h16M8 15v-4m4 4V7m4 8v-6"/></svg></span><div><strong>No transaction trend for this period</strong><p>Monthly trends will appear once deposits, withdrawals or transfers have posted.</p></div></div>
@@ -78,7 +78,7 @@
                     <article class="report-account-card" th:each="account : ${report.accounts}">
                         <div class="report-account-top"><span class="report-account-type" th:text="${account.type}">BANK</span><span class="account-status" th:classappend="${account.active ? '' : ' status-closed'}"><span></span><span th:text="${account.active ? 'Active' : 'Closed'}">Active</span></span></div>
                         <h3 th:text="${account.displayName}">Everyday account</h3>
-                        <p class="report-account-balance"><small th:text="${account.currencyCode}">USD</small><strong th:text="${account.balance.toPlainString()}">0.00</strong></p>
+                        <p class="report-account-balance"><small th:unless="${account.currencyCode == 'INR'}" th:text="${account.currencyCode}">USD</small><strong data-money th:attr="data-currency=${account.currencyCode}" th:text="${account.balance.toPlainString()}">0.00</strong></p>
                     </article>
                 </div>
                 <div class="empty-card" th:if="${#lists.isEmpty(report.accounts)}"><span class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9h18M7 15h4"/></svg></span><div><strong>No accounts to summarize</strong><p>Create a financial account to see its current ledger balance.</p></div><a class="button button-secondary" th:href="@{/accounts/new}">Add account</a></div>

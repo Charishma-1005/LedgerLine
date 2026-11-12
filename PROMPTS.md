@@ -268,3 +268,17 @@ The approved IntelliJ workspace configuration supplied `DB_URL`/`DB_USERNAME` an
 **Completed:** Merged the remote README description into the project overview and combined its generated class/log/archive/crash-file ignore patterns with LedgerLine's existing IDE, credential, and build exclusions. No project source or migrations were deleted or overwritten. The remote initial commit and local LedgerLine commit are both retained as merge parents.
 
 **Verification actually performed:** The full `.\mvnw.cmd test` suite passed after resolving the merge: 61 tests, 0 failures, 0 errors, 0 skipped, across 12 suites (H2). No PostgreSQL access, migration, or push was performed.
+
+## 2026-11-11 - Fintech frontend presentation upgrade
+
+**Requested:** Improve the existing Thymeleaf/CSS/vanilla JavaScript banking interface without changing backend code, financial behavior, routes, security, database configuration, or migrations.
+
+**Completed:** Refined shared styles for responsive navigation, tables, forms, focus states, reduced motion, and loading feedback. Restyled the previously unthemed account profile page while retaining the existing account/logout routes and CSRF form. Added consistent currency display: INR uses a rupee symbol, Indian digit grouping, and two decimals with decimal-string rounding; other currencies use conventional three-digit grouping and retain meaningful fractional digits. Applied it to balances, history, reports, auditor statement lines, charts, and operation review. Added accessible invalid-state attributes and submit feedback to existing forms. No frontend framework or dependency was added.
+
+**Verification actually performed:** Full `.\mvnw.cmd test` passed after the changes: 61 tests, 0 failures, 0 errors, 0 skipped, across 12 suites (H2). `node --check` passed, and a Node harness verified INR grouping/two-decimal rounding, negative INR formatting, non-INR grouping, and preservation of a three-decimal currency amount. `git diff --check` passed. Changes are limited to Thymeleaf templates, static CSS/JavaScript, and this documentation; no database, migrations, backend API, financial logic, or security configuration was changed.
+
+## 2026-11-11 - Render Docker deployment
+
+Added a multi-stage Java 21 Docker build that uses the Maven wrapper to package and test the Spring Boot application, then runs the generated JAR on a Java 21 JRE as a non-root user. The image activates the existing `prod` profile, exposes 8080, and forwards Render's `PORT` environment variable to Spring Boot (defaulting to 8080). Added Docker build-context exclusions for local credentials, IDE/build output, and common backup artifacts. README documents Render setup, runtime-only database credentials, PostgreSQL TLS requirements, and Flyway startup privileges. No Java, production configuration, financial logic, security configuration, schema, or migration files were changed.
+
+**Verification actually performed:** Full `.\mvnw.cmd test` passed: 61 tests, 0 failures, 0 errors, 0 skipped, across 12 suites. `git diff --check` passed. A Docker image build could not be run because the Docker CLI is unavailable in this environment; the Dockerfile itself was not executed.

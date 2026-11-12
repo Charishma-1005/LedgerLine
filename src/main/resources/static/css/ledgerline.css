@@ -662,3 +662,109 @@ body.menu-open { overflow: hidden; }
     .auditor-shell .auditor-profile .profile-copy { display: grid; }
     .auditor-shell .auditor-logout { margin-left: 51px; }
 }
+
+/* Shared finishing pass for legibility, keyboard access, and compact layouts. */
+:root {
+    --navy-950: #0e1929;
+    --navy-900: #14243a;
+    --mint-600: #159678;
+    --mint-700: #11765f;
+    --canvas: #f4f7f8;
+    --shadow-soft: 0 16px 42px rgba(18, 35, 54, .07);
+}
+
+html { scroll-behavior: smooth; }
+body { background: radial-gradient(ellipse at 82% 0, rgba(218, 241, 233, .26), transparent 34%), var(--canvas); }
+a, button, input, select { -webkit-tap-highlight-color: transparent; }
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 3px solid rgba(21, 150, 120, .38);
+    outline-offset: 3px;
+}
+button, input, select { color: inherit; }
+button:disabled, input:disabled { cursor: wait; opacity: .7; }
+.button { min-height: 42px; border-radius: 9px; }
+.button-primary { background: linear-gradient(135deg, #159678, #117a65); }
+.button-primary:hover { background: linear-gradient(135deg, #13856c, #0d6d5a); }
+.side-link { min-height: 47px; border-radius: 10px; }
+.topbar { background: rgba(255,255,255,.94); }
+.page-content { animation: workspace-enter .38s ease both; }
+.balance-panel, .quick-actions-panel, .account-card, .transactions-card,
+.form-panel, .account-detail-hero, .transaction-detail-card, .report-currency-panel,
+.report-trend-card, .report-account-card, .admin-stat-card, .admin-user-panel {
+    box-shadow: var(--shadow-soft);
+}
+.transaction-table th { height: 44px; font-size: 10px; }
+.transaction-table td { height: 62px; }
+.transaction-table th, .transaction-table td { padding-right: 18px; padding-left: 18px; }
+.transaction-kind strong, .transaction-date, .transaction-description,
+.transaction-amount, .audit-actor, .audit-target, .admin-user-email { font-size: 11px; }
+.field-error, .identity-validation, .operation-error, .report-warning { line-height: 1.55; }
+[aria-invalid="true"] { border-color: #c75860 !important; }
+.form-field input[aria-invalid="true"]:focus, .form-field select[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px rgba(199, 88, 96, .12);
+}
+form[aria-busy="true"] button[type="submit"]::after {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    margin-left: 8px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    content: "";
+    animation: button-spin .7s linear infinite;
+    vertical-align: -2px;
+}
+.identity-account-card {
+    display: grid;
+    max-width: 850px;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 20px;
+    padding: clamp(20px, 4vw, 32px);
+    border: 1px solid #e3eaf0;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #fff, #fbfdfc);
+    box-shadow: var(--shadow-soft);
+}
+.identity-account-avatar { width: 56px; height: 56px; color: #176f5d; background: #e8f6f0; font-size: 14px; }
+.identity-account-copy h2 { overflow-wrap: anywhere; margin: 5px 0; color: #1d2b40; font-size: clamp(17px, 2.4vw, 22px); letter-spacing: -.4px; }
+.identity-account-copy p:last-child { margin: 0; color: #758195; font-size: 12px; }
+.identity-account-actions { display: flex; flex-wrap: wrap; grid-column: 2; gap: 9px; }
+.identity-account-signout { grid-column: 2; width: fit-content; }
+.report-date-form button[disabled], .admin-search-form button[disabled] { min-width: 110px; }
+.empty-card, .balance-empty { line-height: 1.65; }
+.account-balance, .detail-balance, .report-account-balance, .report-metric strong,
+.total-balance-row strong, .transaction-amount, .transaction-detail-amount,
+.auditor-statement-table td, .trend-data-table td { font-variant-numeric: tabular-nums lining-nums; }
+.transaction-detail-amount [data-money] { white-space: nowrap; }
+.auditor-table td, .auditor-statement-table td { font-size: 11px; }
+.welcome-landing { background: radial-gradient(ellipse at 78% 34%, rgba(216, 241, 232, .7), transparent 40%), #f7f9fb; }
+.landing-content h1 { font-weight: 650; }
+.identity-brand-panel { background: radial-gradient(ellipse at 12% 87%, rgba(57,145,125,.24), transparent 43%), linear-gradient(145deg, #0e1929 5%, #1b2c44 100%); }
+
+@keyframes workspace-enter {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes button-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 850px) {
+    .transaction-table th, .transaction-table td { padding-right: 14px; padding-left: 14px; }
+    .identity-account-card { gap: 15px; }
+}
+@media (max-width: 600px) {
+    .transaction-table th:nth-child(2), .transaction-table td:nth-child(2) { display: table-cell; }
+    .recent-section .transaction-table th:nth-child(2), .recent-section .transaction-table td:nth-child(2) { display: none; }
+    .transaction-table th, .transaction-table td { padding-right: 12px; padding-left: 12px; }
+    .identity-account-card { grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 18px; }
+    .identity-account-avatar { width: 44px; height: 44px; font-size: 11px; }
+    .identity-account-actions, .identity-account-signout { grid-column: 1 / -1; }
+    .identity-account-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .identity-account-actions .button, .identity-account-signout .button { width: 100%; }
+    .transaction-detail-amount { flex-wrap: wrap; font-size: clamp(23px, 7vw, 30px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .page-content { animation: none; }
+}

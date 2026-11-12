@@ -3,16 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111b2c">
     <title>Your account | LedgerLine</title>
+    <link rel="stylesheet" th:href="@{/css/ledgerline.css}">
 </head>
 <body>
-<main>
-    <h1>Your LedgerLine account</h1>
-    <p>Signed in as <span th:text="${email}"></span></p>
-    <p><a th:href="@{/accounts}">Manage accounts</a></p>
-    <form th:action="@{/logout}" method="post">
-        <button type="submit">Sign out</button>
-    </form>
-</main>
+<div class="app-shell">
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <aside th:replace="~{fragments/navigation :: sidebar('overview', ${email})}"></aside>
+    <main class="main-workspace">
+        <header class="topbar">
+            <button class="mobile-menu-button" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="main-sidebar" data-menu-toggle>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            </button>
+            <div class="breadcrumb"><a th:href="@{/}">Workspace</a><span class="breadcrumb-separator">/</span><strong>Account</strong></div>
+            <div class="topbar-actions"><span class="secure-indicator"><span class="secure-dot"></span> Secure workspace</span><span class="avatar avatar-small" aria-hidden="true">LL</span></div>
+        </header>
+        <div class="page-content form-page-content">
+            <section class="welcome-row">
+                <div><p class="eyebrow">PROFILE &amp; ACCESS</p><h1>Your account</h1><p class="welcome-subtitle">Review your sign-in identity and workspace links.</p></div>
+            </section>
+            <section class="identity-account-card" aria-labelledby="account-profile-heading">
+                <span class="avatar identity-account-avatar" aria-hidden="true">LL</span>
+                <div class="identity-account-copy">
+                    <p class="panel-label">SIGNED-IN IDENTITY</p>
+                    <h2 id="account-profile-heading" th:text="${email}">you@example.com</h2>
+                    <p>Your private LedgerLine workspace is protected by your signed-in session.</p>
+                </div>
+                <nav class="identity-account-actions" aria-label="Account actions">
+                    <a class="button button-secondary" th:href="@{/accounts}">Manage accounts <span aria-hidden="true">→</span></a>
+                    <a class="button button-secondary" th:href="@{/transactions}">View transactions <span aria-hidden="true">→</span></a>
+                </nav>
+                <form class="identity-account-signout" th:action="@{/logout}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button class="button button-danger" type="submit">Sign out securely</button>
+                </form>
+            </section>
+            <footer class="page-footer"><span>LedgerLine</span><span>Your account details are private to your session.</span></footer>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/ledgerline.js}" defer></script>
 </body>
 </html>

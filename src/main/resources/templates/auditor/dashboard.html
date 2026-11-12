@@ -71,8 +71,8 @@
                             <td><strong th:text="${line.transactionType + ' #' + line.transactionId}">DEPOSIT #15</strong><small class="auditor-description" th:text="${line.description}">Deposit</small></td>
                             <td th:text="${line.ledgerAccountName}">Everyday</td>
                             <td th:text="${line.currencyCode}">USD</td>
-                            <td class="auditor-debit" th:text="${line.debitAmount.toPlainString()}">0.00</td>
-                            <td class="auditor-credit" th:text="${line.creditAmount.toPlainString()}">25.00</td>
+                            <td class="auditor-debit" data-money th:attr="data-currency=${line.currencyCode}" th:text="${line.debitAmount.toPlainString()}">0.00</td>
+                            <td class="auditor-credit" data-money th:attr="data-currency=${line.currencyCode}" th:text="${line.creditAmount.toPlainString()}">25.00</td>
                         </tr></tbody>
                     </table></div>
                 </div>
